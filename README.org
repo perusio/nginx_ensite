@@ -53,9 +53,35 @@ Bell Labs will do if you don't have [[http://www.gnu.org/software/gawk/][gawk]] 
 the former is the default =awk=. The script should work in *BSD, OS X
 and GNU/Linux.
 
+** Command Completion
+
+   There's a Bash script for automatic completion of sites to be
+   enabled and disabled located in the =bash_completion.d= directory.
+
+   To make use of it you should:
+
+   1. Source the script to Bash by issuing either =source
+      nginx-ensite= or =. nginx-ensite=. 
+
+   2. Now when you invoke =nginx_ensite= the sites under
+      =/etc/nginx/sites-available= will appear as hypothesis for
+      completion. For =nginx_dissite= you get all the sites listed in
+      =/etc/nginx/sites-enabled= as possible completions.
+
+   3. To get the completion script to be sourced upon login please
+      copy it to =/etc/bash_completion.d/= or whatever location your
+      shell environment uses to place all the completion
+      scripts. =/etc/bash_completion.d/= is the location in Debian
+      (hence also in Ubuntu) of Bash completion scripts.
+      
 
 ** Security & Trust
 
 The script is signed with my GPG key. Just do =gpg --keyserver
 keys.gpg.net --recv-keys 4D722217=. Verify by issuing =gpg --verify
 nginx_ensite.sig=.
+
+** Acknowledgments
+
+Thanks to [[http://github.com/xufan6][xufan6]] for setting me on the path of the Bash completion
+script. 
