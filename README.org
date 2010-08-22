@@ -48,7 +48,7 @@ The script is written in Bash and uses what I believe to be some Bash
 specific idioms. I never tested it in other shells. You're welcomed to
 try it in any other shell. Please do tell me how it went. 
 
-It requires also [[http://en.wikipedia.org/wiki/AWK][awk]]. The original =AWK= (usually called BWK awk) from
+It requires also [[http://en.wikipedia.org/wiki/AWK][awk]]. The original =awk= (usually called BWK awk) from
 Bell Labs will do if you don't have [[http://www.gnu.org/software/gawk/][gawk]] (Gnu awk).  IN OS X and *BSD
 the former is the default =awk=. The script should work in *BSD, OS X
 and GNU/Linux.
