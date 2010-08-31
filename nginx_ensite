@@ -57,7 +57,13 @@ if [ $# -ne 1 ]; then
     print_usage
 else
     SITE_AVAILABLE="$AVAILABLE_SITES_PATH/$1"
-    SITE_ENABLED="$ENABLED_SITES_PATH/$1"
+    # If enabling the 'default' site then make sure that it's teh
+    # first to be loaded.
+    if [ $1 == "default" ]; then
+        SITE_ENABLED="$ENABLED_SITES_PATH/000-default"
+    else
+        SITE_ENABLED="$ENABLED_SITES_PATH/$1"    
+    fi
 fi
 
 ## Check that the file corresponding to site exists if enabling or
