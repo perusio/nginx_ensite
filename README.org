@@ -74,6 +74,11 @@ and GNU/Linux.
       scripts. =/etc/bash_completion.d/= is the location in Debian
       (hence also in Ubuntu) of Bash completion scripts.
       
+** Manual pages
+
+Two UNIX manual pages are included in the man directory. They should
+be copied to a proper directory in your system. Something along the
+lines of =/usr/share/man/man8= or =/usr/local/share/man/man8=.
 
 ** Security & Trust
 
