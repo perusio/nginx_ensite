@@ -1,0 +1,71 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH NGINX_ENSITE 8 "31 August 2010"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.AM
+.SH NAME
+nginx_ensite, nginx_dissite \- enable or disable an nginx site / virtual host
+.SH SYNOPSIS
+.B nginx_ensite
+.RI [ site ]
+.PP
+.B nginx_dissite
+.RI [ site ]
+.SH DESCRIPTION
+This manual page documents briefly the
+.B nginx_ensite
+and
+.B nginx_dissite
+commands.
+.PP
+.B nginx_ensite
+is a script that enables the specified site which is included in a
+http block within the
+.B nginx
+configuration.  It does this by creating symlinks within
+.BR /etc/nginx/sites-enabled .
+Likewise,
+.B nginx_dissite
+disables a site by removing those symlinks.  It is not an error to
+enable a site which is already enabled, or to disable one which is
+already disabled.
+.PP
+The
+.B default
+site is handled specially: The resulting symlink will be called
+.B 000-default
+in order to be loaded first.
+.SH EXAMPLES
+.RS
+.B "nginx_dissite default"
+.RE
+.PP
+Disables the
+.B default
+site.
+.SH FILES
+.TP
+.B /etc/nginx/sites-available
+Directory with files giving information on available sites.
+.TP
+.B /etc/nginx/sites-enabled
+Directory with links to the files in
+.B sites-available
+for enabled sites.
+.SH AUTHOR
+This manual page was written by Ant\['o]nio Almeida <appa@perusio.net>
+(based on the a2ensite manual
+page by Stefan Fritsch <sf@debian.org>) for the Debian GNU/Linux distribution.
