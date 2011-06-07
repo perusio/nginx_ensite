@@ -26,7 +26,9 @@ Note that the script assumes a specific file system topology for your
 
 2. After running the script with =foobar= as argument: =nginx_ensite
    foobar=. A symbolic link =/etc/nginx/sites-enabled/foobar ->
-   /etc/nginx/sites-available/foobar= is created.
+   /etc/nginx/sites-available/foobar= is created. Note that if the
+   =/etc/nginx/sites-enabled= directory doesn't exist the script
+   creates it.
 
 3. The script invokes =nginx -t= to test if the configuration is
    correct. If the test fails no symbolic link is created and an error
