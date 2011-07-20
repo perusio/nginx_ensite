@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv='content-type' value='text/html;charset=utf8'>
+  <meta name='generator' value='Ronn/v0.7.3 (http://github.com/rtomayko/ronn/tree/0.7.3)'>
+  <title>nginx_ensite(8) - enable/disable an nginx site/virtual host</title>
+  <style type='text/css' media='all'>
+  /* style: man */
+  body#manpage {margin:0}
+  .mp {max-width:100ex;padding:0 9ex 1ex 4ex}
+  .mp p,.mp pre,.mp ul,.mp ol,.mp dl {margin:0 0 20px 0}
+  .mp h2 {margin:10px 0 0 0}
+  .mp > p,.mp > pre,.mp > ul,.mp > ol,.mp > dl {margin-left:8ex}
+  .mp h3 {margin:0 0 0 4ex}
+  .mp dt {margin:0;clear:left}
+  .mp dt.flush {float:left;width:8ex}
+  .mp dd {margin:0 0 0 9ex}
+  .mp h1,.mp h2,.mp h3,.mp h4 {clear:left}
+  .mp pre {margin-bottom:20px}
+  .mp pre+h2,.mp pre+h3 {margin-top:22px}
+  .mp h2+pre,.mp h3+pre {margin-top:5px}
+  .mp img {display:block;margin:auto}
+  .mp h1.man-title {display:none}
+  .mp,.mp code,.mp pre,.mp tt,.mp kbd,.mp samp,.mp h3,.mp h4 {font-family:monospace;font-size:14px;line-height:1.42857142857143}
+  .mp h2 {font-size:16px;line-height:1.25}
+  .mp h1 {font-size:20px;line-height:2}
+  .mp {text-align:justify;background:#fff}
+  .mp,.mp code,.mp pre,.mp pre code,.mp tt,.mp kbd,.mp samp {color:#131211}
+  .mp h1,.mp h2,.mp h3,.mp h4 {color:#030201}
+  .mp u {text-decoration:underline}
+  .mp code,.mp strong,.mp b {font-weight:bold;color:#131211}
+  .mp em,.mp var {font-style:italic;color:#232221;text-decoration:none}
+  .mp a,.mp a:link,.mp a:hover,.mp a code,.mp a pre,.mp a tt,.mp a kbd,.mp a samp {color:#0000ff}
+  .mp b.man-ref {font-weight:normal;color:#434241}
+  .mp pre {padding:0 4ex}
+  .mp pre code {font-weight:normal;color:#434241}
+  .mp h2+pre,h3+pre {padding-left:0}
+  ol.man-decor,ol.man-decor li {margin:3px 0 10px 0;padding:0;float:left;width:33%;list-style-type:none;text-transform:uppercase;color:#999;letter-spacing:1px}
+  ol.man-decor {width:100%}
+  ol.man-decor li.tl {text-align:left}
+  ol.man-decor li.tc {text-align:center;letter-spacing:4px}
+  ol.man-decor li.tr {text-align:right;float:right}
+  </style>
+  <style type='text/css' media='all'>
+  /* style: toc */
+  .man-navigation {display:block !important;position:fixed;top:0;left:113ex;height:100%;width:100%;padding:48px 0 0 0;border-left:1px solid #dbdbdb;background:#eee}
+  .man-navigation a,.man-navigation a:hover,.man-navigation a:link,.man-navigation a:visited {display:block;margin:0;padding:5px 2px 5px 30px;color:#999;text-decoration:none}
+  .man-navigation a:hover {color:#111;text-decoration:underline}
+  </style>
+</head>
+<!--
+  The following styles are deprecated and will be removed at some point:
+  div#man, div#man ol.man, div#man ol.head, div#man ol.man.
+
+  The .man-page, .man-decor, .man-head, .man-foot, .man-title, and
+  .man-navigation should be used instead.
+-->
+<body id='manpage'>
+  <div class='mp' id='man'>
+
+  <div class='man-navigation' style='display:none'>
+    <a href="#NAME">NAME</a>
+    <a href="#SYNOPSIS">SYNOPSIS</a>
+    <a href="#DESCRIPTION">DESCRIPTION</a>
+    <a href="#EXAMPLES">EXAMPLES</a>
+    <a href="#FILES">FILES</a>
+    <a href="#AUTHOR">AUTHOR</a>
+    <a href="#SEE-ALSO">SEE ALSO</a>
+  </div>
+
+  <ol class='man-decor man-head man head'>
+    <li class='tl'>nginx_ensite(8)</li>
+    <li class='tc'>MANUAL</li>
+    <li class='tr'>nginx_ensite(8)</li>
+  </ol>
+
+  <h2 id="NAME">NAME</h2>
+<p class="man-name">
+  <code>nginx_ensite</code> - <span class="man-whatis">enable/disable an nginx site/virtual host</span>
+</p>
+
+<h2 id="SYNOPSIS">SYNOPSIS</h2>
+
+<p><code>nginx_ensite</code> [ <var>site</var> ]...<br />
+<code>nginx_dissite</code> [ <var>site</var> ]...<br /></p>
+
+<h2 id="DESCRIPTION">DESCRIPTION</h2>
+
+<p>This manual page documents briefly the nginx_ensite
+and nginx_dissite commands.</p>
+
+<p>nginx_ensite is a script that <strong>enables</strong> the specified site which is included in a
+http block within the nginx configuration.  It does this by creating
+symlinks within <code>/etc/nginx/sites-enabled</code>.</p>
+
+<p>Likewise, nginx_dissite disables a site by removing those
+symlinks. It is not an error to enable a site which is already
+enabled, or to disable one which is already disabled.</p>
+
+<p>The default site is handled specially: the resulting symlink will be
+called <code>000-default</code> in order to be loaded first.</p>
+
+<h2 id="EXAMPLES">EXAMPLES</h2>
+
+<p>Enable the default site:</p>
+
+<pre><code>nginx_ensite default
+</code></pre>
+
+<p>Disable the default site:</p>
+
+<pre><code>nginx_dissite default
+</code></pre>
+
+<p>Enable the example.org site:</p>
+
+<pre><code>nginx_ensite example.org    
+</code></pre>
+
+<h2 id="FILES">FILES</h2>
+
+<p><code>/etc/nginx/sites-available</code> <br />
+Directory with files providing information on available sites.</p>
+
+<p><code>/etc/nginx/sites-enabled</code> <br />
+Directory with links to the files in <code>sites-available</code> for enabled sites.</p>
+
+<h2 id="AUTHOR">AUTHOR</h2>
+
+<p>This manual page was written by Antonio Almeida &lt;appa@perusio.net>
+&mdash; based on the <code>a2ensite</code> manual page by Stefan Fritsch
+&lt;sf@debian.org> for the Debian GNU/Linux distribution.</p>
+
+<h2 id="SEE-ALSO">SEE ALSO</h2>
+
+<p><span class="man-ref">a2ensite<span class="s">(8)</span></span>, <span class="man-ref">a2dissite<span class="s">(8)</span></span></p>
+
+
+  <ol class='man-decor man-foot man foot'>
+    <li class='tl'></li>
+    <li class='tc'>July 2011</li>
+    <li class='tr'>nginx_ensite(8)</li>
+  </ol>
+
+  </div>
+</body>
+</html>
