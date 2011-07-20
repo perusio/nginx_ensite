@@ -21,29 +21,28 @@ That's it you're done.
 Note that the script assumes a specific file system topology for your
 `nginx` configuration. Here's the rundown:
 
-1. All virtual hosts configuration files should be under
-   `/etc/nginx/sites-available`. For example the virtual host
-   `foobar` is configured through a file in `/etc/sites/available`. 
+ 1. All virtual hosts configuration files should be under
+    `/etc/nginx/sites-available`. For example the virtual host `foobar`
+    is configured through a file in `/etc/sites/available`.
 
-2. After running the script with `foobar` as argument: `nginx_ensite
-   foobar`. A symbolic link `/etc/nginx/sites-enabled/foobar ->
-   /etc/nginx/sites-available/foobar` is created. Note that if the
-   `/etc/nginx/sites-enabled` directory doesn't exist the script
-   creates it.
+ 2. After running the script with `foobar` as argument: `nginx_ensite
+    foobar`. A symbolic link `/etc/nginx/sites-enabled/foobar ->
+    /etc/nginx/sites-available/foobar` is created. Note that if the
+    `/etc/nginx/sites-enabled` directory doesn't exist the script
+    creates it.
 
-3. The script invokes `nginx -t` to test if the configuration is
-   correct. If the test fails no symbolic link is created and an error
-   is signaled.
+ 3. The script invokes `nginx -t` to test if the configuration is
+    correct. If the test fails no symbolic link is created and an error
+    is signaled.
 
-4. If everything is correct now just reload nginx, in Debian based
-   systems that means invoking `/etc/init.d/nginx reload`.
+ 4. If everything is correct now just reload nginx, in Debian based
+    systems that means invoking `/etc/init.d/nginx reload`.
 
-5. Now point the browser to the newly configured host and everything
-   should work properly assuming your configuration is sensible.
+ 5. Now point the browser to the newly configured host and everything
+    should work properly assuming your configuration is sensible.
 
-6. To disable the site just run `nginx_dissite foobar`. Reload nginx
-   to update the running environment.
-
+ 6. To disable the site just run `nginx_dissite foobar`. Reload nginx
+    to update the running environment.
 
 ## Requirements
 
@@ -51,10 +50,11 @@ The script is written in Bash and uses what I believe to be some Bash
 specific idioms. I never tested it in other shells. You're welcomed to
 try it in any other shell. Please do tell me how it went. 
 
-It requires also [(http://en.wikipedia.org/wiki/AWK][awk]]. The original `awk` (usually called BWK awk) from
-Bell Labs will do if you don't have [(http://www.gnu.org/software/gawk/][gawk]] (Gnu awk).  IN OS X and *BSD
-the former is the default `awk`. The script should work in *BSD, OS X
-and GNU/Linux.
+It requires also [awk](http://en.wikipedia.org/wiki/AWK). The original
+`awk` (usually called BWK awk) from Bell Labs will do if you don't
+have [gawk](http://www.gnu.org/software/gawk) (Gnu awk).  IN OS X and
+*BSD the former is the default `awk`. The script should work in *BSD,
+OS X and GNU/Linux.
 
 ## Command Completion
 
