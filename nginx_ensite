@@ -37,8 +37,8 @@ NGINX=$(which nginx)
 NGINX_CONF_DIR=/etc/nginx
 AVAILABLE_SITES_PATH="$NGINX_CONF_DIR/sites-available"
 ENABLED_SITES_PATH="$NGINX_CONF_DIR/sites-enabled"
-
 SCRIPTNAME=${0##*/}
+
 
 ## Checking the type of action we will perform. Enabling or disabling.
 ACTION=$(echo $SCRIPTNAME | awk '$0 ~ /dissite/ {print "DISABLE"} $0 ~ /ensite/ {print "ENABLE"} $0 !~ /(dis|en)site/ {print "UNKNOWN"}')
@@ -53,6 +53,7 @@ function print_usage() {
     echo "$SCRIPTNAME <site name>"
     exit 1
 }
+
 
 ## Check the number of arguments.
 if [ $# -ne 1 ]; then
@@ -70,6 +71,7 @@ else
     fi
 fi
 
+
 ## Check that the file corresponding to site exists if enabling or
 ## that the symbolic link exists if disabling. Perform the desired
 ## action if possible. If not signal an error and exit.
@@ -77,7 +79,7 @@ case $ACTION in
     ENABLE)
         if [ -r $SITE_AVAILABLE ]; then
             [ -h $SITE_ENABLED ] || ln -s $SITE_AVAILABLE $SITE_ENABLED
-          # Test for a well formed configuration.
+            ## Test for a well formed configuration.
             echo "Testing nginx configuration..."
             $NGINX -t && STATUS=0
             if [ $STATUS ]; then
