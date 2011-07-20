@@ -83,6 +83,10 @@ Two UNIX manual pages are included in the man directory. They should
 be copied to a proper directory in your system. Something along the
 lines of `/usr/share/man/man8` or `/usr/local/share/man/man8`.
 
+Here's an [online](http://github.perusio.org/nginx_ensite/) version of
+the manpage.
+
+
 ## Security & Trust
 
 The script is signed with my GPG key. Just do `gpg --keyserver
