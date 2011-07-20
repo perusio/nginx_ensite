@@ -1,0 +1,52 @@
+nginx\_dissite, nginx\_ensite -- enable/disable an nginx site/virtual host
+================================================================================
+
+## SYNOPSIS
+
+`nginx_ensite` [ <site> ]...<br>
+`nginx_dissite` [ <site> ]...<br>
+
+## DESCRIPTION
+
+This manual page documents briefly the nginx\_ensite
+and nginx\_dissite commands. 
+
+nginx\_ensite is a script that **enables** the specified site which is included in a
+http block within the nginx configuration.  It does this by creating
+symlinks within `/etc/nginx/sites-enabled`.
+
+Likewise, nginx\_dissite disables a site by removing those
+symlinks. It is not an error to enable a site which is already
+enabled, or to disable one which is already disabled.  
+
+The default site is handled specially: the resulting symlink will be
+called `000-default` in order to be loaded first.
+
+## EXAMPLES
+
+Enable the default site:
+    nginx_ensite default
+
+Disable the default site:
+    nginx_dissite default
+
+Enable the example.org site:
+    nginx_ensite example.org    
+    
+## FILES 
+
+`/etc/nginx/sites-available` <br>
+Directory with files providing information on available sites.
+
+`/etc/nginx/sites-enabled` <br>
+Directory with links to the files in `sites-available` for enabled sites. 
+
+## AUTHOR
+
+This manual page was written by Antonio Almeida \<appa@perusio.net\>
+&mdash; based on the `a2ensite` manual page by Stefan Fritsch
+\<sf@debian.org\> for the Debian GNU/Linux distribution.
+
+## SEE ALSO
+
+a2ensite(8), a2dissite(8)
