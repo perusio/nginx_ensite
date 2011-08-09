@@ -64,13 +64,15 @@
     <a href="#DESCRIPTION">DESCRIPTION</a>
     <a href="#EXAMPLES">EXAMPLES</a>
     <a href="#FILES">FILES</a>
-    <a href="#AUTHOR">AUTHOR</a>
     <a href="#SEE-ALSO">SEE ALSO</a>
+    <a href="#COPYRIGHT">COPYRIGHT</a>
+    <a href="#AVAILABILITY">AVAILABILITY</a>
+    <a href="#AUTHOR">AUTHOR</a>
   </div>
 
   <ol class='man-decor man-head man head'>
     <li class='tl'>nginx_ensite(8)</li>
-    <li class='tc'>MANUAL</li>
+    <li class='tc'></li>
     <li class='tr'>nginx_ensite(8)</li>
   </ol>
 
@@ -98,18 +100,24 @@ symlinks. It is not an error to enable a site which is already
 enabled, or to disable one which is already disabled.</p>
 
 <p>The default site is handled specially: the resulting symlink will be
-called <code>000-default</code> in order to be loaded first.</p>
+called <code>000-default</code> in order to be listed first. Note that listing
+&mdash; as done by <code>ls</code> &mdash; orders the files
+lexicographically. Nginx loads the files by the OS provided order. To
+make sure a specific server configuration is loaded first specify the
+<code>default_server</code> parameter on the
+<a href="http://wiki.nginx.org/HttpCoreModule#listen"><code>listen</code></a> directive of
+that server configuration.</p>
 
 <h2 id="EXAMPLES">EXAMPLES</h2>
 
 <p>Enable the default site:</p>
 
-<pre><code>nginx_ensite default
+<pre><code>nginx_ensite 000-default
 </code></pre>
 
 <p>Disable the default site:</p>
 
-<pre><code>nginx_dissite default
+<pre><code>nginx_dissite 000-default
 </code></pre>
 
 <p>Enable the example.org site:</p>
@@ -125,20 +133,30 @@ Directory with files providing information on available sites.</p>
 <p><code>/etc/nginx/sites-enabled</code> <br />
 Directory with links to the files in <code>sites-available</code> for enabled sites.</p>
 
-<h2 id="AUTHOR">AUTHOR</h2>
-
-<p>This manual page was written by Antonio Almeida &lt;appa@perusio.net>
-&mdash; based on the <code>a2ensite</code> manual page by Stefan Fritsch
-&lt;sf@debian.org> for the Debian GNU/Linux distribution.</p>
-
 <h2 id="SEE-ALSO">SEE ALSO</h2>
 
-<p><span class="man-ref">a2ensite<span class="s">(8)</span></span>, <span class="man-ref">a2dissite<span class="s">(8)</span></span></p>
+<p><a href="http://man.cx/a2ensite" class="man-ref">a2ensite<span class="s">(8)</span></a>, <a href="http://man.cx/a2dissite" class="man-ref">a2dissite<span class="s">(8)</span></a>, <a href="http://man.cx/nginx" class="man-ref">nginx<span class="s">(1)</span></a></p>
+
+<h2 id="COPYRIGHT">COPYRIGHT</h2>
+
+<p>nginx_ensite is Copyright (C) 2010-2011 Antonio P. P. Almeida
+&lt;appa@perusio.net> under the terms of a MIT license.</p>
+
+<h2 id="AVAILABILITY">AVAILABILITY</h2>
+
+<p>The latest version of nginx_ensite is available from:
+<a href="https://github.com/perusio/nginx_ensite" data-bare-link="true">https://github.com/perusio/nginx_ensite</a>.</p>
+
+<h2 id="AUTHOR">AUTHOR</h2>
+
+<p>nginx_ensite was written by Antonio P. P. Almeida &lt;appa@perusio.net>
+that also wrote the manual page based on the <code>a2ensite</code> manual page by
+Stefan Fritsch &lt;sf@debian.org> for the Debian GNU/Linux distribution.</p>
 
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'></li>
-    <li class='tc'>July 2011</li>
+    <li class='tc'>August 2011</li>
     <li class='tr'>nginx_ensite(8)</li>
   </ol>
 
