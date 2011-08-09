@@ -1,5 +1,5 @@
 nginx\_dissite, nginx\_ensite -- enable/disable an nginx site/virtual host
-================================================================================
+==========================================================================
 
 ## SYNOPSIS
 
@@ -20,17 +20,26 @@ symlinks. It is not an error to enable a site which is already
 enabled, or to disable one which is already disabled.  
 
 The default site is handled specially: the resulting symlink will be
-called `000-default` in order to be loaded first.
+called `000-default` in order to be listed first. Note that listing
+&mdash; as done by `ls` &mdash; orders the files
+lexicographically. Nginx loads the files by the OS provided order. To
+make sure a specific server configuration is loaded first specify the
+`default_server` parameter on the
+[`listen`](http://wiki.nginx.org/HttpCoreModule#listen) directive of
+that server configuration.
 
 ## EXAMPLES
 
 Enable the default site:
-    nginx_ensite default
+
+    nginx_ensite 000-default
 
 Disable the default site:
-    nginx_dissite default
+
+    nginx_dissite 000-default
 
 Enable the example.org site:
+
     nginx_ensite example.org    
     
 ## FILES 
@@ -41,12 +50,23 @@ Directory with files providing information on available sites.
 `/etc/nginx/sites-enabled` <br>
 Directory with links to the files in `sites-available` for enabled sites. 
 
-## AUTHOR
-
-This manual page was written by Antonio Almeida \<appa@perusio.net\>
-&mdash; based on the `a2ensite` manual page by Stefan Fritsch
-\<sf@debian.org\> for the Debian GNU/Linux distribution.
-
 ## SEE ALSO
 
-a2ensite(8), a2dissite(8)
+a2ensite(8), a2dissite(8), nginx(1)
+
+## COPYRIGHT
+
+nginx_ensite is Copyright (C) 2010-2011 Antonio P. P. Almeida
+\<appa@perusio.net\> under the terms of a MIT license.
+
+## AVAILABILITY
+
+The latest version of nginx_ensite is available from: 
+[https://github.com/perusio/nginx_ensite](https://github.com/perusio/nginx_ensite).
+
+## AUTHOR
+
+nginx_ensite was written by Antonio P. P. Almeida \<appa@perusio.net\>
+that also wrote the manual page based on the `a2ensite` manual page by
+Stefan Fritsch \<sf@debian.org\> for the Debian GNU/Linux distribution.
+

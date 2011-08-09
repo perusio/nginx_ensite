@@ -1,0 +1,4 @@
+## Manuals referenced on this project.
+a2ensite(8) http://man.cx/a2ensite
+a2dissite(8) http://man.cx/a2dissite
+nginx(1) http://man.cx/nginx

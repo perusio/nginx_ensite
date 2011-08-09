@@ -1,71 +1,90 @@
-.\"                                      Hey, EMACS: -*- nroff -*-
-.\" First parameter, NAME, should be all caps
-.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
-.\" other parameters are allowed: see man(7), man(1)
-.TH NGINX_ENSITE 8 "31 August 2010"
-.\" Please adjust this date whenever revising the manpage.
-.\"
-.\" Some roff macros, for reference:
-.\" .nh        disable hyphenation
-.\" .hy        enable hyphenation
-.\" .ad l      left justify
-.\" .ad b      justify to both left and right margins
-.\" .nf        disable filling
-.\" .fi        enable filling
-.\" .br        insert line break
-.\" .sp <n>    insert n+1 empty lines
-.\" for manpage-specific macros, see man(7)
-.AM
-.SH NAME
-nginx_ensite, nginx_dissite \- enable or disable an nginx site / virtual host
-.SH SYNOPSIS
-.B nginx_ensite
-.RI [ site ]
-.PP
-.B nginx_dissite
-.RI [ site ]
-.SH DESCRIPTION
-This manual page documents briefly the
-.B nginx_ensite
-and
-.B nginx_dissite
-commands.
-.PP
-.B nginx_ensite
-is a script that enables the specified site which is included in a
-http block within the
-.B nginx
-configuration.  It does this by creating symlinks within
-.BR /etc/nginx/sites-enabled .
-Likewise,
-.B nginx_dissite
-disables a site by removing those symlinks.  It is not an error to
-enable a site which is already enabled, or to disable one which is
-already disabled.
-.PP
-The
-.B default
-site is handled specially: The resulting symlink will be called
-.B 000-default
-in order to be loaded first.
-.SH EXAMPLES
-.RS
-.B "nginx_dissite default"
-.RE
-.PP
-Disables the
-.B default
-site.
-.SH FILES
-.TP
-.B /etc/nginx/sites-available
-Directory with files giving information on available sites.
-.TP
-.B /etc/nginx/sites-enabled
-Directory with links to the files in
-.B sites-available
-for enabled sites.
-.SH AUTHOR
-This manual page was written by Ant\['o]nio Almeida <appa@perusio.net>
-(based on the a2ensite manual
-page by Stefan Fritsch <sf@debian.org>) for the Debian GNU/Linux distribution.
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "NGINX_ENSITE" "8" "August 2011" "" ""
+.
+.SH "NAME"
+\fBnginx_ensite\fR \- enable/disable an nginx site/virtual host
+.
+.SH "SYNOPSIS"
+\fBnginx_ensite\fR [ \fIsite\fR ]\.\.\.
+.
+.br
+\fBnginx_dissite\fR [ \fIsite\fR ]\.\.\.
+.
+.br
+.
+.SH "DESCRIPTION"
+This manual page documents briefly the nginx_ensite and nginx_dissite commands\.
+.
+.P
+nginx_ensite is a script that \fBenables\fR the specified site which is included in a http block within the nginx configuration\. It does this by creating symlinks within \fB/etc/nginx/sites\-enabled\fR\.
+.
+.P
+Likewise, nginx_dissite disables a site by removing those symlinks\. It is not an error to enable a site which is already enabled, or to disable one which is already disabled\.
+.
+.P
+The default site is handled specially: the resulting symlink will be called \fB000\-default\fR in order to be listed first\. Note that listing \(em as done by \fBls\fR \(em orders the files lexicographically\. Nginx loads the files by the OS provided order\. To make sure a specific server configuration is loaded first specify the \fBdefault_server\fR parameter on the \fBlisten\fR \fIhttp://wiki\.nginx\.org/HttpCoreModule#listen\fR directive of that server configuration\.
+.
+.SH "EXAMPLES"
+Enable the default site:
+.
+.IP "" 4
+.
+.nf
+
+nginx_ensite 000\-default
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Disable the default site:
+.
+.IP "" 4
+.
+.nf
+
+nginx_dissite 000\-default
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Enable the example\.org site:
+.
+.IP "" 4
+.
+.nf
+
+nginx_ensite example\.org
+.
+.fi
+.
+.IP "" 0
+.
+.SH "FILES"
+\fB/etc/nginx/sites\-available\fR
+.
+.br
+Directory with files providing information on available sites\.
+.
+.P
+\fB/etc/nginx/sites\-enabled\fR
+.
+.br
+Directory with links to the files in \fBsites\-available\fR for enabled sites\.
+.
+.SH "SEE ALSO"
+a2ensite(8), a2dissite(8), nginx(1)
+.
+.SH "COPYRIGHT"
+nginx_ensite is Copyright (C) 2010\-2011 Antonio P\. P\. Almeida <appa@perusio\.net> under the terms of a MIT license\.
+.
+.SH "AVAILABILITY"
+The latest version of nginx_ensite is available from: \fIhttps://github\.com/perusio/nginx_ensite\fR\.
+.
+.SH "AUTHOR"
+nginx_ensite was written by Antonio P\. P\. Almeida <appa@perusio\.net> that also wrote the manual page based on the \fBa2ensite\fR manual page by Stefan Fritsch <sf@debian\.org> for the Debian GNU/Linux distribution\.
