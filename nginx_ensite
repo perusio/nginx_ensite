@@ -39,23 +39,23 @@ AVAILABLE_SITES_PATH="$NGINX_CONF_DIR/sites-available"
 ENABLED_SITES_PATH="$NGINX_CONF_DIR/sites-enabled"
 SCRIPTNAME=${0##*/}
 
-
 ## Checking the type of action we will perform. Enabling or disabling.
 ACTION=$(echo $SCRIPTNAME | awk '$0 ~ /dissite/ {print "DISABLE"} $0 ~ /ensite/ {print "ENABLE"} $0 !~ /(dis|en)site/ {print "UNKNOWN"}')
 
 if [ "$ACTION" == "UNKNOWN" ]; then
     echo "$SCRIPTNAME: Unknown action!"
     print_usage
+    exit 4
 fi
 
 function print_usage() {
     echo "$SCRIPTNAME <site name>"
-    exit 1
 }
 
 ## Check the number of arguments.
 if [ $# -ne 1 ]; then
     print_usage
+    exit 1
 else
     SITE_AVAILABLE="$AVAILABLE_SITES_PATH/$1"
     # Check if the sites-enabled directory exists. If not create it.
