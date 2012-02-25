@@ -48,12 +48,10 @@ if [ "$ACTION" == "UNKNOWN" ]; then
     print_usage
 fi
 
-
 function print_usage() {
     echo "$SCRIPTNAME <site name>"
     exit 1
 }
-
 
 ## Check the number of arguments.
 if [ $# -ne 1 ]; then
@@ -71,14 +69,19 @@ else
     fi
 fi
 
-
 ## Check that the file corresponding to site exists if enabling or
 ## that the symbolic link exists if disabling. Perform the desired
 ## action if possible. If not signal an error and exit.
 case $ACTION in
     ENABLE)
         if [ -r $SITE_AVAILABLE ]; then
-            [ -h $SITE_ENABLED ] || ln -s $SITE_AVAILABLE $SITE_ENABLED
+            if [ -h $SITE_ENABLED ]; then
+                ## If already enabled say it and exit.
+                echo "$1 is already enabled."
+                exit 0
+            else # symlink if not yet enabled
+                ln -s $SITE_AVAILABLE $SITE_ENABLED
+            fi
             ## Test for a well formed configuration.
             echo "Testing nginx configuration..."
             $NGINX -t && STATUS=0
