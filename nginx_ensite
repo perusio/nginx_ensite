@@ -86,7 +86,7 @@ case $ACTION in
             echo "Testing nginx configuration..."
             $NGINX -t && STATUS=0
             if [ $STATUS ]; then
-                echo -n "site $1 has been enabled."
+                echo -n "Site $1 has been enabled. "
                 echo "Run /etc/init.d/nginx reload to apply the changes."
                 exit 0
             else
@@ -100,7 +100,7 @@ case $ACTION in
     DISABLE)
         if [ -h $SITE_ENABLED ]; then
             rm $SITE_ENABLED
-            echo "Site $1 has been disabled."
+            echo -n "Site $1 has been disabled. "
             echo "Run /etc/init.d/nginx reload to apply the changes."
             exit 0
         else
