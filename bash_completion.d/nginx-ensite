@@ -32,7 +32,7 @@
 ## Handling of both enabled and available sites.
 _nginx_sites() {
     # Get the available or enabled sites for nginx.
-    COMPREPLY=( $( compgen -W '$( command ls /etc/nginx/$1 2>/dev/null \
+    COMPREPLY=( $( compgen -W '$( command find /etc/nginx/$1 -type f -printf "%P " 2>/dev/null \
                | sed 's/[.]conf$//' )' -- $cur  ) )
 }
 
