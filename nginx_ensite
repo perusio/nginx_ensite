@@ -37,6 +37,7 @@ NGINX=$(which nginx)
 NGINX_CONF_DIR=/etc/nginx
 AVAILABLE_SITES_PATH="$NGINX_CONF_DIR/sites-available"
 ENABLED_SITES_PATH="$NGINX_CONF_DIR/sites-enabled"
+AVAILABLE_SITES_DIR="sites-available"
 SCRIPTNAME=${0##*/}
 
 ## Checking the type of action we will perform. Enabling or disabling.
@@ -52,14 +53,18 @@ function print_usage() {
     echo "$SCRIPTNAME <site name>"
 }
 
+make_relative_path() {
+    printf ../%.0s $(eval echo {0..`expr length "${1//[^\/]/}"`})
+    echo "$AVAILABLE_SITES_DIR/$1"
+}
+
 ## Check the number of arguments.
 if [ $# -ne 1 ]; then
     print_usage
     exit 1
 else
-    SITE_AVAILABLE="$AVAILABLE_SITES_PATH/$1"
-    # Check if the sites-enabled directory exists. If not create it.
-    [ -d $ENABLED_SITES_PATH ] || mkdir -p $ENABLED_SITES_PATH
+    SITE_AVAILABLE=`make_relative_path "$1"`
+
     # If enabling the 'default' site then make sure that it's teh
     # first to be loaded.
     if [ $1 == "default" ]; then
@@ -67,6 +72,9 @@ else
     else
         SITE_ENABLED="$ENABLED_SITES_PATH/$1"
     fi
+
+    # Check if the directory where we will place the symlink exists. If not create it.
+    [ -d ${SITE_ENABLED%/*} ] || mkdir -p ${SITE_ENABLED%/*}
 fi
 
 ## Check that the file corresponding to site exists if enabling or
@@ -74,6 +82,10 @@ fi
 ## action if possible. If not signal an error and exit.
 case $ACTION in
     ENABLE)
+        # Change to the directory where we will place the symlink so that we
+        # see the relative path correctly.
+        cd "${SITE_ENABLED%/*}";
+
         if [ -r $SITE_AVAILABLE ]; then
             if [ -h $SITE_ENABLED ]; then
                 ## If already enabled say it and exit.
