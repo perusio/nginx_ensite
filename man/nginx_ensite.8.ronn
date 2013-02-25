@@ -32,11 +32,11 @@ that server configuration.
 
 Enable the default site:
 
-    nginx_ensite 000-default
+    nginx_ensite default
 
 Disable the default site:
 
-    nginx_dissite 000-default
+    nginx_dissite default
 
 Enable the example.org site:
 
