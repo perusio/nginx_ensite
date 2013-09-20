@@ -99,7 +99,7 @@ case $ACTION in
             $NGINX -t && STATUS=0
             if [ $STATUS ]; then
                 echo -n "Site $1 has been enabled. "
-                echo "Run /etc/init.d/nginx reload to apply the changes."
+                echo "Run sudo service nginx reload to apply the changes."
                 exit 0
             else
                 exit 2
@@ -113,7 +113,7 @@ case $ACTION in
         if [ -h $SITE_ENABLED ]; then
             rm $SITE_ENABLED
             echo -n "Site $1 has been disabled. "
-            echo "Run /etc/init.d/nginx reload to apply the changes."
+            echo "Run sudo service nginx reload to apply the changes."
             exit 0
         else
             echo "Site $1 doesn't exist."
