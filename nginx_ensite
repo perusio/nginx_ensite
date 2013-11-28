@@ -29,15 +29,15 @@
 ### DEALINGS IN THE SOFTWARE.
 
 ## The nginx binary.
-NGINX=$(which nginx)
-[ -x $NGINX ] || exit 0
+NGINX=$(command -v nginx) || exit 0
 
 ## The paths for both nginx configuration files and the sites
 ## configuration files and symbolic link destinations.
-NGINX_CONF_DIR=/etc/nginx
+NGINX_CONF_DIR=${NGINX_CONF_DIR-/etc/nginx}
 AVAILABLE_SITES_PATH="$NGINX_CONF_DIR/sites-available"
 ENABLED_SITES_PATH="$NGINX_CONF_DIR/sites-enabled"
 AVAILABLE_SITES_DIR="sites-available"
+
 SCRIPTNAME=${0##*/}
 
 ## Checking the type of action we will perform. Enabling or disabling.
@@ -54,7 +54,7 @@ function print_usage() {
 }
 
 make_relative_path() {
-    printf ../%.0s $(eval echo {0..`expr length "${1//[^\/]/}"`})
+    printf ../%.0s $(eval echo {0..$(expr length "${1//[^\/]/}")})
     echo "$AVAILABLE_SITES_DIR/$1"
 }
 
@@ -63,9 +63,9 @@ if [ $# -ne 1 ]; then
     print_usage
     exit 1
 else
-    SITE_AVAILABLE=`make_relative_path "$1"`
+    SITE_AVAILABLE=$(make_relative_path "$1")
 
-    # If enabling the 'default' site then make sure that it's teh
+    # If enabling the 'default' site then make sure that it's the
     # first to be loaded.
     if [ $1 == "default" ]; then
         SITE_ENABLED="$ENABLED_SITES_PATH/000-default"
@@ -87,19 +87,20 @@ case $ACTION in
         cd "${SITE_ENABLED%/*}";
 
         if [ -r $SITE_AVAILABLE ]; then
-            if [ -h $SITE_ENABLED ]; then
+            ## Test for a well formed configuration.
+            echo "Testing nginx configuration..."
+            $NGINX -t && STATUS=0
+            ## Check the config testing status and if the link exists already.
+            if [ $STATUS ] && [ -h $SITE_ENABLED ]; then
                 ## If already enabled say it and exit.
                 echo "$1 is already enabled."
                 exit 0
             else # symlink if not yet enabled
                 ln -s $SITE_AVAILABLE $SITE_ENABLED
             fi
-            ## Test for a well formed configuration.
-            echo "Testing nginx configuration..."
-            $NGINX -t && STATUS=0
             if [ $STATUS ]; then
                 echo -n "Site $1 has been enabled. "
-                echo "Run /etc/init.d/nginx reload to apply the changes."
+                echo "Run 'service nginx reload' to apply the changes."
                 exit 0
             else
                 exit 2
@@ -112,12 +113,13 @@ case $ACTION in
     DISABLE)
         if [ -h $SITE_ENABLED ]; then
             rm $SITE_ENABLED
-            echo -n "Site $1 has been disabled. "
-            echo "Run /etc/init.d/nginx reload to apply the changes."
+            echo -n "Site $1 has been disabled."
+            echo "Run 'service nginx reload' to apply the changes."
             exit 0
         else
             echo "Site $1 doesn't exist."
-            exit 3
+            exit 5
         fi
         ;;
 esac
+
