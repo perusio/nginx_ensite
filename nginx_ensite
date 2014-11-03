@@ -54,7 +54,7 @@ function print_usage() {
 }
 
 make_relative_path() {
-    printf ../%.0s $(eval echo {0..`expr length "${1//[^\/]/}"`})
+    printf ../%.0s $(eval echo {0..`echo ${1//[^\/]/} | awk '{ print length }'`})
     echo "$AVAILABLE_SITES_DIR/$1"
 }
 
