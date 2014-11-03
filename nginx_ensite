@@ -32,9 +32,15 @@
 NGINX=$(which nginx)
 [ -x $NGINX ] || exit 0
 
+## The nginx configuration folder
+if [ -d /usr/local/etc/nginx ]; then
+    NGINX_CONF_DIR=/usr/local/etc/nginx
+else
+    NGINX_CONF_DIR=/etc/nginx
+fi
+
 ## The paths for both nginx configuration files and the sites
 ## configuration files and symbolic link destinations.
-NGINX_CONF_DIR=/etc/nginx
 AVAILABLE_SITES_PATH="$NGINX_CONF_DIR/sites-available"
 ENABLED_SITES_PATH="$NGINX_CONF_DIR/sites-enabled"
 AVAILABLE_SITES_DIR="sites-available"
@@ -99,7 +105,7 @@ case $ACTION in
             $NGINX -t && STATUS=0
             if [ $STATUS ]; then
                 echo -n "Site $1 has been enabled. "
-                echo "Run /etc/init.d/nginx reload to apply the changes."
+                echo "Run \"$NGINX -s reload\" to apply the changes."
                 exit 0
             else
                 exit 2
@@ -113,7 +119,7 @@ case $ACTION in
         if [ -h $SITE_ENABLED ]; then
             rm $SITE_ENABLED
             echo -n "Site $1 has been disabled. "
-            echo "Run /etc/init.d/nginx reload to apply the changes."
+            echo "Run \"$NGINX -s reload\" to apply the changes."
             exit 0
         else
             echo "Site $1 doesn't exist."
