@@ -116,6 +116,12 @@ case $ACTION in
         fi
         ;;
     DISABLE)
+        #On debian the default is enabled as default, not 000-default
+        if [ "$1" = "default" ] ; then
+            if [ -h "$ENABLED_SITES_PATH/default" ] ; then
+                SITE_ENABLED="$ENABLED_SITES_PATH/default"
+           fi
+        fi
         if [ -h $SITE_ENABLED ]; then
             rm $SITE_ENABLED
             echo -n "Site $1 has been disabled. "
