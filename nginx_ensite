@@ -2,7 +2,7 @@
 
 ### nginx_ensite --- Bash script to enable or disable a site in nginx.
 
-### Copyright (C) 2010 António P. P. Almeida <appa@perusio.net>
+### Copyright (C) 2010, 2015 António P. P. Almeida <appa@perusio.net>
 
 ### Author: António P. P. Almeida <appa@perusio.net>
 
@@ -28,98 +28,143 @@
 ### FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ### DEALINGS IN THE SOFTWARE.
 
+SCRIPTNAME=${0##*/}
+
 ## The nginx binary.
-NGINX=$(command -v nginx) || exit 0
+NGINX=$(command -v nginx) || exit 1
+
+## Default values.
+NGINX_CONF_DIR=/etc/nginx
+STARTUP_PROGRAM_NAME=service
 
 ## The paths for both nginx configuration files and the sites
 ## configuration files and symbolic link destinations.
-NGINX_CONF_DIR=${NGINX_CONF_DIR-/etc/nginx}
 AVAILABLE_SITES_PATH="$NGINX_CONF_DIR/sites-available"
 ENABLED_SITES_PATH="$NGINX_CONF_DIR/sites-enabled"
-AVAILABLE_SITES_DIR="sites-available"
-
-SCRIPTNAME=${0##*/}
-
-## Checking the type of action we will perform. Enabling or disabling.
-ACTION=$(echo $SCRIPTNAME | awk '$0 ~ /dissite/ {print "DISABLE"} $0 ~ /ensite/ {print "ENABLE"} $0 !~ /(dis|en)site/ {print "UNKNOWN"}')
-
-if [ "$ACTION" == "UNKNOWN" ]; then
-    echo "$SCRIPTNAME: Unknown action!"
-    print_usage
-    exit 4
-fi
 
 function print_usage() {
-    echo "$SCRIPTNAME <site name>"
+    echo "$SCRIPTNAME [-c <nginx configuration base directory> default: /etc/nginx] [ -s <startup program name> default: service] <site name>"
 }
 
-make_relative_path() {
-    printf ../%.0s $(eval echo {0..$(expr length "${1//[^\/]/}")})
-    echo "$AVAILABLE_SITES_DIR/$1"
-}
-
-## Check the number of arguments.
-if [ $# -ne 1 ]; then
-    print_usage
-    exit 1
+## Extract the startup program name from a given argument. If it's a
+## path to nginx then add the '-s reload' to the name. Otherwise just
+## return the given argument.
+## $1: the program name.
+## Returns the proper startup program name,
+function get_startup_program_name() {
+    if [[ $1 =~ [[:alnum:]/-]]+nginx$ ]]; then
+    echo "$1 -s reload"
 else
-    SITE_AVAILABLE=$(make_relative_path "$1")
-
-    # If enabling the 'default' site then make sure that it's the
-    # first to be loaded.
-    if [ $1 == "default" ]; then
-        SITE_ENABLED="$ENABLED_SITES_PATH/000-default"
-    else
-        SITE_ENABLED="$ENABLED_SITES_PATH/$1"
-    fi
-
-    # Check if the directory where we will place the symlink exists. If not create it.
-    [ -d ${SITE_ENABLED%/*} ] || mkdir -p ${SITE_ENABLED%/*}
+    echo "$1"
 fi
+}
 
-## Check that the file corresponding to site exists if enabling or
-## that the symbolic link exists if disabling. Perform the desired
-## action if possible. If not signal an error and exit.
-case $ACTION in
-    ENABLE)
-        # Change to the directory where we will place the symlink so that we
-        # see the relative path correctly.
-        cd "${SITE_ENABLED%/*}";
+ ## Create the relative path to the vhost file.
+ ## $1: configuration file name (usually the vhost)
+ ## $2: available sites directory name (usually sites-available)
+ ## Returns the relative path from the sites-enabled directory.
+ function make_relative_path() {
+     printf '../%.0s%s/%s' $(eval echo {0..$(expr length "${1//[^\/]/}")}) $2 $1
+ }
 
-        if [ -r $SITE_AVAILABLE ]; then
-            ## Test for a well formed configuration.
-            echo "Testing nginx configuration..."
-            $NGINX -t && STATUS=0
-            ## Check the config testing status and if the link exists already.
-            if [ $STATUS ] && [ -h $SITE_ENABLED ]; then
-                ## If already enabled say it and exit.
-                echo "$1 is already enabled."
-                exit 0
-            else # symlink if not yet enabled
-                ln -s $SITE_AVAILABLE $SITE_ENABLED
-            fi
-            if [ $STATUS ]; then
-                echo -n "Site $1 has been enabled. "
-                echo "Run 'service nginx reload' to apply the changes."
-                exit 0
-            else
-                exit 2
-            fi
-        else
-            echo "Site configuration file $1 not found."
-            exit 3
-        fi
-        ;;
-    DISABLE)
-        if [ -h $SITE_ENABLED ]; then
-            rm $SITE_ENABLED
-            echo -n "Site $1 has been disabled."
-            echo "Run 'service nginx reload' to apply the changes."
-            exit 0
-        else
-            echo "Site $1 doesn't exist."
-            exit 5
-        fi
-        ;;
-esac
+ ## Checking the type of action we will perform. Enabling or disabling.
+ ACTION=$(echo $SCRIPTNAME | awk '$0 ~ /dissite/ {print "DISABLE"} $0 ~ /ensite/ {print "ENABLE"} $0 !~ /(dis|en)site/ {print "UNKNOWN"}')
 
+ if [ "$ACTION" == "UNKNOWN" ]; then
+     echo "$SCRIPTNAME: Unknown action!"
+     print_usage
+     exit 2
+ fi
+
+ ## Check the number of arguments.
+ if [ $# -lt 1 -o $# -gt 5 ]; then
+     print_usage
+     exit 3
+ fi
+
+ ## Parse the getops arguments.
+ while getopts c:s: OPT; do
+     case $OPT in
+         c|+c)
+             NGINX_CONF_DIR="$OPTARG"
+             ;;
+         s|+s)
+             STARTUP_PROGRAM_NAME=$(get_startup_program_name "$OPTARG")
+             ;;
+         *)
+             print_usage
+             exit 4
+     esac
+ done
+ shift $(( OPTIND - 1 ))
+ OPTIND=1
+
+ ## Check the number of arguments.
+ if [ $# -ne 1 ]; then
+     print_usage
+     exit 3
+ else
+     SITE_AVAILABLE=$(make_relative_path "$1" ${AVAILABLE_SITES_PATH##*/})
+
+     ## If enabling the 'default' site then make sure that it's the
+     ## first to be loaded.
+     if [ $1 == "default" ]; then
+         SITE_ENABLED="$ENABLED_SITES_PATH/default"
+     else
+         SITE_ENABLED="$ENABLED_SITES_PATH/$1"
+     fi
+     ## Check if the directory where we will place the symlink
+     ## exists. If not create it.
+     [ -d ${SITE_ENABLED%/*} ] || mkdir -p ${SITE_ENABLED%/*}
+ fi
+
+ ## Check that the file corresponding to site exists if enabling or
+ ## that the symbolic link exists if disabling. Perform the desired
+ ## action if possible. If not signal an error and exit.
+ case $ACTION in
+     ENABLE)
+         # Change to the directory where we will place the symlink so that we
+         # see the relative path correctly.
+         cd "${SITE_ENABLED%/*}";
+         if [ -r $SITE_AVAILABLE ]; then
+             ## Test for a well formed configuration.
+             echo "Testing nginx configuration..."
+             $NGINX -t && STATUS=0
+             ## Check the config testing status and if the link exists already.
+             if [ $STATUS ] && [ -h $SITE_ENABLED ]; then
+                 ## If already enabled say it and exit.
+                 echo "$1 is already enabled."
+                 exit 0
+             else # Symlink if not yet enabled.
+                 ln -s $SITE_AVAILABLE $SITE_ENABLED
+             fi
+             if [ $STATUS ]; then
+                 echo -n "Site $1 has been enabled."
+                 printf '\nRun "%s" to apply the changes.\n' $STARTUP_PROGRAM_NAME
+                 exit 0
+             else
+                 exit 5
+             fi
+         else
+             echo "Site configuration file $1 not found."
+             exit 6
+         fi
+
+         ;;
+     DISABLE)
+         if [ "$1" = "default" ] ; then
+             if [ -h "$ENABLED_SITES_PATH/default" ] ; then
+                 SITE_ENABLED="$ENABLED_SITES_PATH/default"
+             fi
+         fi
+         if [ -h $SITE_ENABLED ]; then
+             rm $SITE_ENABLED
+             echo -n "Site $1 has been disabled."
+             printf '\nRun "%s" to apply the changes.\n' $STARTUP_PROGRAM_NAME
+             exit 0
+         else
+             echo "Site $1 doesn't exist."
+             exit 7
+         fi
+         ;;
+ esac
