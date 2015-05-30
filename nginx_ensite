@@ -52,11 +52,12 @@ function print_usage() {
 ## $1: the program name.
 ## Returns the proper startup program name,
 function get_startup_program_name() {
-    if [[ $1 =~ [[:alnum:]/-]]+nginx$ ]]; then
-    echo "$1 -s reload"
-else
-    echo "$1"
-fi
+    local value="$1"
+
+    [[ $1 =~ [[:alnum:]/-]]+nginx$ ]] && value="$1 -s reload"
+
+echo "$value"
+
 }
 
  ## Create the relative path to the vhost file.
@@ -71,14 +72,14 @@ fi
  ACTION=$(echo $SCRIPTNAME | awk '$0 ~ /dissite/ {print "DISABLE"} $0 ~ /ensite/ {print "ENABLE"} $0 !~ /(dis|en)site/ {print "UNKNOWN"}')
 
  if [ "$ACTION" == "UNKNOWN" ]; then
-     echo "$SCRIPTNAME: Unknown action!"
+     echo "$SCRIPTNAME: Unknown action!" >&2
      print_usage
      exit 2
  fi
 
  ## Check the number of arguments.
  if [ $# -lt 1 -o $# -gt 5 ]; then
-     print_usage
+     print_usage >&2
      exit 3
  fi
 
@@ -86,14 +87,17 @@ fi
  while getopts c:s: OPT; do
      case $OPT in
          c|+c)
-             NGINX_CONF_DIR="$OPTARG"
-             ;;
-         s|+s)
-             STARTUP_PROGRAM_NAME=$(get_startup_program_name "$OPTARG")
-             ;;
-         *)
-             print_usage
-             exit 4
+             NGINX_CONF_DIR=$(realpath"$OPTARG")
+             if [[ ! -d $NGINX_CONF_DIR ]]; then
+                 echo "$NGINX_CONF_DIR directory not found." >&2
+                 exit 3
+                 ;;
+                 s|+s)
+                     STARTUP_PROGRAM_NAME=$(get_startup_program_name "$OPTARG")
+                     ;;
+                 *)
+                     print_usage >&2
+                     exit 4
      esac
  done
  shift $(( OPTIND - 1 ))
@@ -101,7 +105,7 @@ fi
 
  ## Check the number of arguments.
  if [ $# -ne 1 ]; then
-     print_usage
+     print_usage >&2
      exit 3
  else
      SITE_AVAILABLE=$(make_relative_path "$1" ${AVAILABLE_SITES_PATH##*/})
@@ -146,7 +150,7 @@ fi
                  exit 5
              fi
          else
-             echo "Site configuration file $1 not found."
+             echo "Site configuration file $1 not found." >&2
              exit 6
          fi
 
@@ -163,7 +167,7 @@ fi
              printf '\nRun "%s" to apply the changes.\n' $STARTUP_PROGRAM_NAME
              exit 0
          else
-             echo "Site $1 doesn't exist."
+             echo "Site $1 doesn't exist." >&2
              exit 7
          fi
          ;;
