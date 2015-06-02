@@ -36,6 +36,12 @@ download: pkg
 build: pkg
 	git archive --output=$(PKG) --prefix=$(PKG_NAME)/ HEAD
 
+sign: $(PKG)
+	gpg --sign --detach-sign --armor $(PKG)
+	git add $(PKG).sig
+	git commit $(PKG).sig -m "Added PGP signature for v$(VERSION)"
+	git push origin master
+
 clean:
 	rm -f $(PKG) $(SIG)
 
@@ -46,7 +52,7 @@ tag:
 	git tag -s -m "Releasing $(VERSION)" v$(VERSION)
 	git push --tags
 
-release: update tag download sign
+release: tag download sign
 
 install:
 	for dir in $(INSTALL_DIRS); do mkdir -p $(DESTDIR)$(PREFIX)/$$dir; done
