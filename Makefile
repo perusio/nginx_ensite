@@ -18,6 +18,7 @@ SIG=$(PKG_DIR)/$(PKG_NAME).asc
 
 PREFIX?=/usr/local
 DOC_DIR=$(PREFIX)/share/doc/$(PKG_NAME)
+COMPLETION_DIR=/etc/bash_completion.d
 
 pkg:
 	mkdir $(PKG_DIR)
@@ -52,6 +53,8 @@ install:
 	for file in $(INSTALL_FILES); do cp $$file $(DESTDIR)$(PREFIX)/$$file; done
 	mkdir -p $(DESTDIR)$(DOC_DIR)
 	cp -r doc/man/$(DOC_FILES) $(DESTDIR)$(DOC_DIR)/
+	mkdir -p $(COMPLETION_DIR)
+	cp bash_completion.d/* $(COMPLETION_DIR)/
 
 uninstall:
 	for file in $(INSTALL_FILES); do rm -f $(DESTDIR)$(PREFIX)/$$file; done
