@@ -91,13 +91,15 @@ echo "$value"
              if [[ ! -d $NGINX_CONF_DIR ]]; then
                  echo "$NGINX_CONF_DIR directory not found." >&2
                  exit 3
-                 ;;
-                 s|+s)
-                     STARTUP_PROGRAM_NAME=$(get_startup_program_name "$OPTARG")
-                     ;;
-                 *)
-                     print_usage >&2
-                     exit 4
+             fi
+             ;;
+         s|+s)
+             STARTUP_PROGRAM_NAME=$(get_startup_program_name "$OPTARG")
+             ;;
+         *)
+             print_usage >&2
+             exit 4
+             ;;
      esac
  done
  shift $(( OPTIND - 1 ))
