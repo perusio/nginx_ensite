@@ -3,8 +3,8 @@ nginx\_dissite, nginx\_ensite -- enable/disable an nginx site/virtual host
 
 ## SYNOPSIS
 
-`nginx_ensite` [ <site> ]...<br>
-`nginx_dissite` [ <site> ]...<br>
+`nginx_ensite ` `-c` [ <nginx configuration directory> ] `-s` [ <startup program name> ] [ <site> ]...<br>
+`nginx_dissite` `-c` [ <nginx configuration directory> ] `-s` [ <startup program name> ] [ <site> ]...<br>
 
 ## DESCRIPTION
 
@@ -12,22 +12,25 @@ This manual page documents briefly the nginx\_ensite
 and nginx\_dissite commands. 
 
 nginx\_ensite is a script that **enables** the specified site which is included in a
-http block within the nginx configuration.  It does this by creating
-symlinks within `/etc/nginx/sites-enabled`.
+http block within the nginx configuration.  <br> qIt does this by creating
+symlinks within the subdirectory `sites-enabled` of the nginx
+configuration directory (default: `/etc/nginx`).
 
 Likewise, nginx\_dissite disables a site by removing those
 symlinks. It is not an error to enable a site which is already
-enabled, or to disable one which is already disabled.  
+enabled, <br> or to disable one which is already disabled.
 
-The default site is handled specially: the resulting symlink will be
-called `000-default` in order to be listed first. Note that listing
-&mdash; as done by `ls` &mdash; orders the files
-lexicographically. Nginx loads the files by the OS provided order. To
-make sure a specific server configuration is loaded first specify the
-`default_server` parameter on the
-[`listen`](http://wiki.nginx.org/HttpCoreModule#listen) directive of
-that server configuration.
+## OPTIONS
 
+ * `-c` <nginx configuration directory>
+   Sets the nginx configuration directory to the given path (default: `/etc/nginx`).
+   
+ * `-s` <startup program name> 
+   Sets the nginx startup program name (default: `service`). <br>
+   Note that the program must be on the search path available to
+   `nginx_ensite`/`nginx_dissite`. <br>If that not's the case then you
+   need to pass the full path to the startup program executable. 
+ 
 ## EXAMPLES
 
 Enable the default site:
@@ -40,15 +43,24 @@ Disable the default site:
 
 Enable the example.org site:
 
-    nginx_ensite example.org    
-    
+    nginx_ensite example.org
+
+Enable the image serving vhost:
+
+    nginx_ensite -c /home/luser/api/service/image/nginx img.example.org
+
+this corresponds to
+`/home/luser/api/service/image/nginx/sites-available/img.example.org` <br>
+server configuration. This file will be symlinked to
+`/home/luser/api/service/image/nginx/sites-enabled/img.example.org`.
+
 ## FILES 
 
 `/etc/nginx/sites-available` <br>
-Directory with files providing information on available sites.
+Default directory with files providing information on available sites.
 
 `/etc/nginx/sites-enabled` <br>
-Directory with links to the files in `sites-available` for enabled sites. 
+Default directory with links to the files in `sites-available` for enabled sites. 
 
 ## SEE ALSO
 
@@ -56,8 +68,8 @@ a2ensite(8), a2dissite(8), nginx(1)
 
 ## COPYRIGHT
 
-nginx_ensite is Copyright (C) 2010-2011 Antonio P. P. Almeida
-\<appa@perusio.net\> under the terms of a MIT license.
+nginx_ensite is Copyright (C) 2010-2015 Antonio P. P. Almeida
+<appa@perusio.net\> under the terms of a MIT license.
 
 ## AVAILABILITY
 
@@ -66,7 +78,7 @@ The latest version of nginx_ensite is available from:
 
 ## AUTHOR
 
-nginx_ensite was written by Antonio P. P. Almeida \<appa@perusio.net\>
+nginx_ensite was written by Antonio P. P. Almeida <appa@perusio.net\>
 that also wrote the manual page based on the `a2ensite` manual page by
-Stefan Fritsch \<sf@debian.org\> for the Debian GNU/Linux distribution.
+Stefan Fritsch <sf@debian.org\> for the Debian GNU/Linux distribution.
 

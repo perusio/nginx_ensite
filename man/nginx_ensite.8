@@ -1,16 +1,16 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "NGINX_ENSITE" "8" "February 2013" "" ""
+.TH "NGINX_ENSITE" "8" "June 2015" "" ""
 .
 .SH "NAME"
 \fBnginx_ensite\fR \- enable/disable an nginx site/virtual host
 .
 .SH "SYNOPSIS"
-\fBnginx_ensite\fR [ \fIsite\fR ]\.\.\.
+\fBnginx_ensite\fR \fB\-c\fR [ \fInginx configuration directory\fR ] \fB\-s\fR [ \fIstartup program name\fR ] [ \fIsite\fR ]\.\.\.
 .
 .br
-\fBnginx_dissite\fR [ \fIsite\fR ]\.\.\.
+\fBnginx_dissite\fR \fB\-c\fR [ \fInginx configuration directory\fR ] \fB\-s\fR [ \fIstartup program name\fR ] [ \fIsite\fR ]\.\.\.
 .
 .br
 .
@@ -18,13 +18,32 @@
 This manual page documents briefly the nginx_ensite and nginx_dissite commands\.
 .
 .P
-nginx_ensite is a script that \fBenables\fR the specified site which is included in a http block within the nginx configuration\. It does this by creating symlinks within \fB/etc/nginx/sites\-enabled\fR\.
+nginx_ensite is a script that \fBenables\fR the specified site which is included in a http block within the nginx configuration\.
+.
+.br
+qIt does this by creating symlinks within the subdirectory \fBsites\-enabled\fR of the nginx configuration directory (default: \fB/etc/nginx\fR)\.
 .
 .P
-Likewise, nginx_dissite disables a site by removing those symlinks\. It is not an error to enable a site which is already enabled, or to disable one which is already disabled\.
+Likewise, nginx_dissite disables a site by removing those symlinks\. It is not an error to enable a site which is already enabled,
 .
-.P
-The default site is handled specially: the resulting symlink will be called \fB000\-default\fR in order to be listed first\. Note that listing \(em as done by \fBls\fR \(em orders the files lexicographically\. Nginx loads the files by the OS provided order\. To make sure a specific server configuration is loaded first specify the \fBdefault_server\fR parameter on the \fBlisten\fR \fIhttp://wiki\.nginx\.org/HttpCoreModule#listen\fR directive of that server configuration\.
+.br
+or to disable one which is already disabled\.
+.
+.SH "OPTIONS"
+.
+.IP "\(bu" 4
+\fB\-c\fR \fInginx configuration directory\fR Sets the nginx configuration directory to the given path (default: \fB/etc/nginx\fR)\.
+.
+.IP "\(bu" 4
+\fB\-s\fR \fIstartup program name\fR Sets the nginx startup program name (default: \fBservice\fR)\.
+.
+.br
+Note that the program must be on the search path available to \fBnginx_ensite\fR/\fBnginx_dissite\fR\.
+.
+.br
+If that not\'s the case then you need to pass the full path to the startup program executable\.
+.
+.IP "" 0
 .
 .SH "EXAMPLES"
 Enable the default site:
@@ -65,23 +84,42 @@ nginx_ensite example\.org
 .
 .IP "" 0
 .
+.P
+Enable the image serving vhost:
+.
+.IP "" 4
+.
+.nf
+
+nginx_ensite \-c /home/luser/api/service/image/nginx img\.example\.org
+.
+.fi
+.
+.IP "" 0
+.
+.P
+this corresponds to \fB/home/luser/api/service/image/nginx/sites\-available/img\.example\.org\fR
+.
+.br
+server configuration\. This file will be symlinked to \fB/home/luser/api/service/image/nginx/sites\-enabled/img\.example\.org\fR\.
+.
 .SH "FILES"
 \fB/etc/nginx/sites\-available\fR
 .
 .br
-Directory with files providing information on available sites\.
+Default directory with files providing information on available sites\.
 .
 .P
 \fB/etc/nginx/sites\-enabled\fR
 .
 .br
-Directory with links to the files in \fBsites\-available\fR for enabled sites\.
+Default directory with links to the files in \fBsites\-available\fR for enabled sites\.
 .
 .SH "SEE ALSO"
 a2ensite(8), a2dissite(8), nginx(1)
 .
 .SH "COPYRIGHT"
-nginx_ensite is Copyright (C) 2010\-2011 Antonio P\. P\. Almeida <appa@perusio\.net> under the terms of a MIT license\.
+nginx_ensite is Copyright (C) 2010\-2015 Antonio P\. P\. Almeida <appa@perusio\.net> under the terms of a MIT license\.
 .
 .SH "AVAILABILITY"
 The latest version of nginx_ensite is available from: \fIhttps://github\.com/perusio/nginx_ensite\fR\.
