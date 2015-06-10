@@ -5,12 +5,21 @@
 This is a shell (Bash) script that replicates for
 [nginx](http://wiki.nginx.org) the [Debian](http://debian.org)
 `a2ensite` and `a2dissite` for enabling and disabling sites as virtual
-hosts in Apache 2.2.
+hosts in Apache 2.2/2.4.
 
 The original `a2ensite` and `a2dissite` is written in
 Perl. `a2dissite` is a symbolic link to `a2ensite`. Here I followed
 the same approach, i.e., `nginx_dissite` is a symbolic link to
 `nginx_ensite`.
+
+The script allows for arbitrary paths for the nginx configuration
+directories. This is particularly useful not only to those on Mac, but
+also in a microservice approach where each service has it's own vhost
+configuration, for example.
+
+Th deafult startup program is `service`. Feel free to pass another
+program. For example using nginx to send a `SIGHUP` to reload the
+configuration you just pass the option `-s nginx` to the script. 
 
 ## Installation 
 
@@ -21,7 +30,7 @@ That's it you're done.
 Note that the script assumes a specific file system topology for your
 `nginx` configuration. Here's the rundown:
 
- 1. All virtual hosts configuration files should be under
+ 1. All virtual hosts configuration files are by default under
     `/etc/nginx/sites-available`. For example the virtual host `foobar`
     is configured through a file in `/etc/nginx/sites-available`.
 
@@ -36,7 +45,8 @@ Note that the script assumes a specific file system topology for your
     is signaled.
 
  4. If everything is correct now just reload nginx, in Debian based
-    systems that means invoking `/etc/init.d/nginx reload`.
+    systems that means invoking `service nginx reload` (default
+    startup program name is `service`).
 
  5. Now point the browser to the newly configured host and everything
     should work properly assuming your configuration is sensible.
@@ -95,5 +105,5 @@ nginx_ensite.sig`.
 
 ## Acknowledgments
 
-Thanks to [xufan6](http://github.com/xufan6) for setting me on the path of the Bash completion
-script.
+Thanks to the many people that have contributed to this script. You're
+the stuff Free Software is made of.
