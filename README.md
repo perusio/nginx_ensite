@@ -19,13 +19,23 @@ configuration, for example.
 
 Th deafult startup program is `service`. Feel free to pass another
 program. For example using nginx to send a `SIGHUP` to reload the
-configuration you just pass the option `-s nginx` to the script. 
+configuration you just pass the option `-s nginx` to the script.
 
-## Installation 
+## Installation
+
+### Automatic
+
+```
+git clone https://github.com/perusio/nginx_ensite.git
+cd nginx_ensite
+sudo make install
+```
+
+### Manual
 
 Just drop the script and the symbolic link in `/usr/sbin` or other
 location appropriate for your system. Meaning: `cp nginx_* /usr/sbin`.
-That's it you're done. 
+That's it you're done.
 
 Note that the script assumes a specific file system topology for your
 `nginx` configuration. Here's the rundown:
@@ -58,7 +68,7 @@ Note that the script assumes a specific file system topology for your
 
 The script is written in Bash and uses what I believe to be some Bash
 specific idioms. I never tested it in other shells. You're welcomed to
-try it in any other shell. Please do tell me how it went. 
+try it in any other shell. Please do tell me how it went.
 
 It requires also [awk](http://en.wikipedia.org/wiki/AWK). The original
 `awk` (usually called BWK awk) from Bell Labs will do if you don't
@@ -74,7 +84,7 @@ enabled and disabled located in the `bash_completion.d` directory.
 To make use of it you should:
 
  1. Source the script to Bash by issuing either `source
-    nginx-ensite` or `. nginx-ensite`. 
+    nginx-ensite` or `. nginx-ensite`.
 
  2. Now when you invoke `nginx_ensite` the sites under
     `/etc/nginx/sites-available` will appear as hypothesis for
@@ -86,7 +96,7 @@ To make use of it you should:
     shell environment uses to place all the completion
     scripts. `/etc/bash_completion.d/` is the location in Debian
     (hence also in Ubuntu) of Bash completion scripts.
-      
+
 ## Manual pages
 
 Two UNIX manual pages are included in the man directory. They should
