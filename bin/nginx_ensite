@@ -40,9 +40,8 @@ else
     NGINX=/usr/sbin/nginx
 fi
 
-## Default values.
+## Default value for the configuration directory.
 NGINX_CONF_DIR=/etc/nginx
-STARTUP_PROGRAM_NAME=service
 
 function print_usage() {
     echo "$SCRIPTNAME [-c <nginx configuration base directory> default: /etc/nginx] [ -s <startup program name> default: service] <site name>"
@@ -58,9 +57,11 @@ function get_startup_program_name() {
 
     [[ $1 =~ [[:alnum:]/-]]+nginx$ ]] && value="$1 -s reload"
 
-echo "$value"
-
+    echo "$value"
 }
+
+ ## The default start up program is service.
+ STARTUP_PROGRAM_NAME=$(get_startup_program_name service)
 
  ## Create the relative path to the vhost file.
  ## $1: configuration file name (usually the vhost)
