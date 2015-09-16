@@ -58,7 +58,7 @@ release: tag download sign
 install:
 	for dir in $(INSTALL_DIRS); do mkdir -p $(DESTDIR)$(PREFIX)/$$dir; done
 	for file in $(INSTALL_FILES); do cp $$file $(DESTDIR)$(PREFIX)/$$file; done
-        (cd $(DESTDIR)$(PREFIX)/bin && test -L nginx_dissite || ln -s nginx_ensite nginx_dissite)
+	(cd $(DESTDIR)$(PREFIX)/bin && test -L nginx_dissite || ln -s nginx_ensite nginx_dissite)
 	mkdir -p $(DESTDIR)$(DOC_DIR)
 	cp -r doc/man/$(DOC_FILES) $(DESTDIR)$(DOC_DIR)/
 	mkdir -p $(COMPLETION_DIR)
