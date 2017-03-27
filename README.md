@@ -110,7 +110,7 @@ the manpage.
 ## Security & Trust
 
 The script is signed with my GPG key. Just do `gpg --keyserver
-keys.gpg.net --recv-keys 4D722217`. Verify by issuing `gpg --verify
+keys.gnupg.net --recv-keys 4D722217`. Verify by issuing `gpg --verify
 nginx_ensite.sig`.
 
 ## Acknowledgments
