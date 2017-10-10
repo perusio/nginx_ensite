@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ### nginx_ensite --- Bash script to enable or disable a site in nginx.
 
